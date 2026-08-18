@@ -11,20 +11,18 @@ import config from '../config';
       useFactory: (configType: ConfigType<typeof config>) => {
         const { url, user, host, name, password, port } = configType.dataBase;
 
-        // Si existe DATABASE_URL (Neon / Render)
         if (url) {
           return {
             type: 'postgres',
             url,
-            synchronize: process.env.NODE_ENV === 'dev',
+            synchronize: false,
             autoLoadEntities: true,
             ssl: {
-              rejectUnauthorized: false, // Obligatorio para la conexión SSL de Neon
+              rejectUnauthorized: false,
             },
           };
         }
 
-        // Si se usan variables independientes (Postgres local / Docker)
         return {
           type: 'postgres',
           host,
@@ -32,7 +30,7 @@ import config from '../config';
           username: user,
           password,
           database: name,
-          synchronize: process.env.NODE_ENV === 'dev',
+          synchronize: false,
           autoLoadEntities: true,
         };
       },
