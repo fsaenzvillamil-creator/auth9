@@ -5,14 +5,17 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) { }
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
+  }
 
-    // Consulta simple a la BD usando la entidad
-    async findAll(): Promise<User[]> {
-        return await this.userRepository.find();
-    }
+  async create(userData: Partial<User>): Promise<User> {
+    const user = this.userRepository.create(userData);
+    return await this.userRepository.save(user);
+  }
 }
